@@ -16,8 +16,9 @@ jCross = function(){
 	/* PRIVATE */
 	
 	/* - private - vars */
-	var serviceObj = false;
-	var serviceURI = _setup.Service+":"+_setup.Port+"/"+_setup.ProductID+"/";
+	var lpQuee 				= new Array();
+	var serviceObj 			= false;
+	var serviceURI 			= _setup.Service+":"+_setup.Port+"/"+_setup.ProductID+"/";
 	
 	/* - private - methodes */
 	var isHTML = function(){
@@ -41,12 +42,20 @@ jCross = function(){
 		serviceObj = document.getElementById('jCross');
 	}
 	
-	var callService = function(){
+	var callService = function(msg){
 		var _requester;
+		var _fingerprint;
+		
+		_fingerprint = new Date();
+		_fingerprint = _fingerprint.getTime();
 		
 		_requester = document.createElement('script');
 		_requester.language = "JavaScript";
-		_requester.src = serviceURI;
+		
+		if(!msg){
+			msg = "";
+		}
+		_requester.src = serviceURI+msg+_fingerprint+"/";
 		
 		serviceObj.innerHTML = "";
 		serviceObj.appendChild(_requester);
@@ -81,5 +90,23 @@ jCross = function(){
 		getDescription	: function(){
 			return description;
 		},
+		
+		clearQuee	: function(){
+			lpQuee = new Array();
+		},
+		
+		onData		: function(msgQuee){
+		},
+		
+		sendData	: function(msg){
+			callService(msg);
+		},
+		
+		updateLpQuee	: function(msgObj){
+			if(msgObj){
+				lpQuee.push(msgObj);
+			}
+			JecLi.jCross.onData(lpQuee);
+		}
 	};
 }();
